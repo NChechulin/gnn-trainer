@@ -174,13 +174,13 @@ def get_dataset(
         Dataset = DATASETS[name.lower()]
         if name:
             return Dataset(
-                root=f"data/{name}",
+                root=f"../data/{name}",
                 name=subset,
                 transform=transform() if transform else None,
             )
         else:
             return Dataset(
-                root=f"data/{name}",
+                root=f"../data/{name}",
                 transform=transform() if transform else None,
             )
     except KeyError:
