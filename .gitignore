@@ -6,7 +6,8 @@
 .idea/
 
 ### Data ###
-.data/
+data/
+output/
 
 ### JupyterNotebooks ###
 # gitignore template for Jupyter Notebooks
