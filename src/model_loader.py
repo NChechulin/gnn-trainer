@@ -95,7 +95,17 @@ MODELS: Dict[str, MessagePassing] = {
 
 
 def get_model_by_name(model_name: str) -> MessagePassing:
-    """Returns a model class by its name"""
+    """Returns a model by its name
+
+    Args:
+        model_name (str): name of a model
+
+    Raises:
+        KeyError: If model was not found
+
+    Returns:
+        MessagePassing: A model class to be initialized
+    """
     try:
         return MODELS[model_name.lower()]
     except KeyError:
