@@ -174,15 +174,28 @@ def get_dataset(
     try:
         Dataset = DATASETS[name.lower()]
         if subset:
-            return Dataset(
-                root=f"../data/{name}",
-                name=subset,
-                transform=transform() if transform else None,
-            )
+            # If a dataset does not support `root`
+            try:
+                return Dataset(
+                    root=f"../data/{name}",
+                    name=subset,
+                    transform=transform() if transform else None,
+                )
+            except TypeError:
+                return Dataset(
+                    name=subset,
+                    transform=transform() if transform else None,
+                )
         else:
-            return Dataset(
-                root=f"../data/{name}",
-                transform=transform() if transform else None,
-            )
+            # If a dataset does not support `root`
+            try:
+                return Dataset(
+                    root=f"../data/{name}",
+                    transform=transform() if transform else None,
+                )
+            except TypeError:
+                return Dataset(
+                    transform=transform() if transform else None,
+                )
     except KeyError:
         raise KeyError(f"No dataset named {name}")
