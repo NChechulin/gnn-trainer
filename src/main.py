@@ -7,7 +7,9 @@ from model_loader import get_model_by_name
 from model_tester import ModelTester
 from utils import split_in_two
 
-parser = argparse.ArgumentParser(description="Process some integers.")
+parser = argparse.ArgumentParser(
+    description="A small utility to train a given GNN model on a given dataset."
+)
 parser.add_argument(
     "--dataset",
     type=str,

@@ -173,7 +173,7 @@ def get_dataset(
     """
     try:
         Dataset = DATASETS[name.lower()]
-        if name:
+        if subset:
             return Dataset(
                 root=f"../data/{name}",
                 name=subset,
