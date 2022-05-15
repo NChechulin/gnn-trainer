@@ -1,5 +1,6 @@
 from typing import Any, Callable, Dict, Optional
 
+from torch_geometric.data import InMemoryDataset
 from torch_geometric.datasets import (
     DBLP,
     DBP15K,
@@ -157,7 +158,7 @@ def get_dataset(
     name: str,
     subset: Optional[str] = None,
     transform: Optional[Callable] = None,
-) -> Any:
+) -> InMemoryDataset:
     """Returns a dataset by it's name and subset
 
     Args:

@@ -1,14 +1,13 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Tuple
 from pathlib import Path
-
+from typing import Tuple
 
 import numpy as np
 import numpy.typing as npt
 import torch
-from torch_geometric.nn import MessagePassing
 from torch_geometric.data import Data
+from torch_geometric.nn import MessagePassing
 
 
 @dataclass
