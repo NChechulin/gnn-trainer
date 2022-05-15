@@ -1,7 +1,10 @@
 import argparse
+
+from torch_geometric.transforms import NormalizeFeatures
+
 from dataset_loader import get_dataset
 from model_loader import get_model_by_name
-from torch_geometric.transforms import NormalizeFeatures
+from model_tester import ModelTester
 from utils import split_in_two
 
 parser = argparse.ArgumentParser(description="Process some integers.")
@@ -44,7 +47,24 @@ def main():
         subset=subset_name,
         transform=NormalizeFeatures,
     )
+
     Model = get_model_by_name(model_name)
+
+    model = Model(
+        in_channels=dataset.num_node_features,
+        out_channels=dataset.num_classes,
+    )
+
+    tester = ModelTester(
+        dataset_name,
+        model_name,
+        model,
+        epochs_num,
+        learning_rate,
+        dataset[0],
+    )
+    tester.train_and_test()
+    tester.to_numpy_file()
 
 
 if __name__ == "__main__":
