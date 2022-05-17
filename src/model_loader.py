@@ -1,96 +1,60 @@
 from typing import Dict
-
+from math import sqrt
+import torch
+import torch.nn.functional as F
 from torch_geometric.nn import (
-    APPNP,
-    AGNNConv,
-    ARMAConv,
-    CGConv,
-    ChebConv,
-    ClusterGCNConv,
-    DNAConv,
-    ECConv,
-    EdgeConv,
-    EGConv,
-    FAConv,
-    FeaStConv,
-    GATConv,
-    GatedGraphConv,
-    GATv2Conv,
-    GCN2Conv,
     GCNConv,
-    GENConv,
-    GeneralConv,
-    GINConv,
-    GINEConv,
-    GMMConv,
-    GraphConv,
-    LEConv,
-    LGConv,
+    GATConv,
     MessagePassing,
-    MFConv,
-    NNConv,
-    PANConv,
-    PDNConv,
-    PNAConv,
-    PointConv,
-    PointNetConv,
-    PointTransformerConv,
-    PPFConv,
-    ResGatedGraphConv,
-    SAGEConv,
-    SGConv,
-    SignedConv,
-    SplineConv,
-    SuperGATConv,
-    TAGConv,
-    TransformerConv,
-    WLConv,
 )
+from torch_geometric.data import Data
+
+
+class GCN(torch.nn.Module):
+    def __init__(self, num_node_features: int, num_classes: int):
+        super().__init__()
+        # Just a safety measure to prevent output layer dimensions be less
+        # than actual number of classes
+        output_size: int = max(int(sqrt(num_node_features)), num_classes)
+
+        self.conv1 = GCNConv(in_channels=num_node_features, out_channels=output_size)
+        self.conv2 = GCNConv(in_channels=output_size, out_channels=num_classes)
+
+    def forward(self, data: Data):
+        x, edge_index = data.x, data.edge_index
+
+        x = self.conv1(x, edge_index)
+        x = F.relu(x)
+        x = F.dropout(x, training=self.training)
+        x = self.conv2(x, edge_index)
+
+        return F.log_softmax(x, dim=1)
+
+
+class GAT(torch.nn.Module):
+    def __init__(self, num_node_features: int, num_classes: int):
+        super().__init__()
+        # Just a safety measure to prevent output layer dimensions be less
+        # than actual number of classes
+        output_size: int = max(int(sqrt(num_node_features)), num_classes)
+
+        self.conv1 = GATConv(in_channels=num_node_features, out_channels=output_size)
+        self.conv2 = GATConv(in_channels=output_size, out_channels=num_classes)
+
+    def forward(self, data: Data):
+        x, edge_index = data.x, data.edge_index
+
+        x = self.conv1(x, edge_index)
+        x = F.relu(x)
+        x = F.dropout(x, training=self.training)
+        x = self.conv2(x, edge_index)
+
+        return x
+
 
 MODELS: Dict[str, MessagePassing] = {
-    "gcnconv": GCNConv,
-    "chebconv": ChebConv,
-    "sageconv": SAGEConv,
-    "graphconv": GraphConv,
-    "gatedgraphconv": GatedGraphConv,
-    "resgatedgraphconv": ResGatedGraphConv,
-    "gatconv": GATConv,
-    "gatv2conv": GATv2Conv,
-    "transformerconv": TransformerConv,
-    "agnnconv": AGNNConv,
-    "tagconv": TAGConv,
-    "ginconv": GINConv,
-    "gineconv": GINEConv,
-    "armaconv": ARMAConv,
-    "sgconv": SGConv,
-    "appnp": APPNP,
-    "mfconv": MFConv,
-    "signedconv": SignedConv,
-    "dnaconv": DNAConv,
-    "pointnetconv": PointNetConv,
-    "pointconv": PointConv,
-    "gmmconv": GMMConv,
-    "splineconv": SplineConv,
-    "nnconv": NNConv,
-    "ecconv": ECConv,
-    "cgconv": CGConv,
-    "edgeconv": EdgeConv,
-    "ppfconv": PPFConv,
-    "feastconv": FeaStConv,
-    "pointtransformerconv": PointTransformerConv,
-    "leconv": LEConv,
-    "pnaconv": PNAConv,
-    "clustergcnconv": ClusterGCNConv,
-    "genconv": GENConv,
-    "gcn2conv": GCN2Conv,
-    "panconv": PANConv,
-    "wlconv": WLConv,
-    "supergatconv": SuperGATConv,
-    "faconv": FAConv,
-    "egconv": EGConv,
-    "pdnconv": PDNConv,
-    "generalconv": GeneralConv,
-    "lgconv": LGConv,
+    "gcn": GCN,
+    "gat": GAT,
 }
 
 
@@ -104,7 +68,7 @@ def get_model_by_name(model_name: str) -> MessagePassing:
         KeyError: If model was not found
 
     Returns:
-        MessagePassing: A model class to be initialized
+        torch.nn.Module: A model class to be initialized
     """
     try:
         return MODELS[model_name.lower()]

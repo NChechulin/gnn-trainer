@@ -48,9 +48,7 @@ class ModelTester:
     def __epoch_train(self, optimizer, criterion) -> Tuple[float, float]:
         self.model.train()
         optimizer.zero_grad()  # Clear gradients.
-        out = self.model(
-            self.data.x, self.data.edge_index
-        )  # Perform a single forward pass.
+        out = self.model(self.data)  # Perform a single forward pass.
         loss = criterion(
             out[self.data.train_mask], self.data.y[self.data.train_mask]
         )  # Compute the loss solely based on the training nodes.
@@ -58,7 +56,7 @@ class ModelTester:
         optimizer.step()  # Update parameters based on gradients.
 
         self.model.eval()
-        out = self.model(self.data.x, self.data.edge_index)
+        out = self.model(self.data)
         pred = out.argmax(dim=1)  # Use the class with highest probability.
         train_correct = (
             pred[self.data.train_mask] == self.data.y[self.data.train_mask]
