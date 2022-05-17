@@ -23,6 +23,7 @@ class ModelTester:
     train_accuracies: npt._ArrayLikeFloat_co = np.array([])
     test_accuracies: npt._ArrayLikeFloat_co = np.array([])
 
+    # TODO: docstring
     def __generate_path(self) -> Path:
         tokens = [
             f"dataset-{self.dataset_name}",
@@ -38,6 +39,7 @@ class ModelTester:
 
         return path
 
+    # TODO: docstring
     def to_numpy_file(self):
         result = np.array([self.losses, self.train_accuracies, self.test_accuracies])
 
@@ -45,6 +47,7 @@ class ModelTester:
         np.save(self.__generate_path(), result)
         print("saved to", path)
 
+    # TODO: docstring
     def __epoch_train(self, optimizer, criterion) -> Tuple[float, float]:
         self.model.train()
         optimizer.zero_grad()  # Clear gradients.
@@ -67,6 +70,7 @@ class ModelTester:
 
         return float(loss), train_acc
 
+    # TODO: Make more generic to accept mask and return accuracy
     def __test(self) -> float:
         self.model.eval()
         out = self.model(self.data.x, self.data.edge_index)
@@ -79,6 +83,7 @@ class ModelTester:
         )  # Derive ratio of correct predictions.
         return test_acc
 
+    # TODO: docstring
     def train_and_test(self):
         optimizer = torch.optim.Adam(
             self.model.parameters(),

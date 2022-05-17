@@ -1,13 +1,10 @@
-from typing import Dict
 from math import sqrt
+from typing import Dict
+
 import torch
 import torch.nn.functional as F
-from torch_geometric.nn import (
-    GCNConv,
-    GATConv,
-    MessagePassing,
-)
 from torch_geometric.data import Data
+from torch_geometric.nn import GATConv, GCNConv, MessagePassing
 
 
 class GCN(torch.nn.Module):
