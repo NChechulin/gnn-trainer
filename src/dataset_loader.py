@@ -14,7 +14,6 @@ DATASETS: Dict[str, Any] = {
 
 def get_dataset(
     name: str,
-    subset: Optional[str] = None,
     transform: Optional[Callable] = None,
 ) -> InMemoryDataset:
     """Returns a dataset by it's name and subset

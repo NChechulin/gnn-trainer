@@ -39,23 +39,25 @@ parser.add_argument(
 def main():
     args = parser.parse_args()
 
-    dataset_name, subset_name = split_in_two(args.dataset)
+    dataset_name = args.dataset_name
     model_name: str = args.model
     epochs_num: int = args.epochs
     learning_rate: float = args.learning_rate
 
     dataset = get_dataset(
         name=dataset_name,
-        subset=subset_name,
         transform=NormalizeFeatures,
     )
 
     Model = get_model_by_name(model_name)
 
     model = Model(
-        in_channels=dataset.num_node_features,
-        out_channels=dataset.num_classes,
+        num_node_features=dataset.num_node_features,
+        num_classes=dataset.num_classes,
     )
+
+    print(dataset.__dir__())
+    print(dataset[0])
 
     tester = ModelTester(
         dataset_name,
