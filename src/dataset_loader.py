@@ -32,6 +32,6 @@ def get_dataset(
         Dataset = DATASETS[name.lower()]
 
         root = Path.cwd().parent / "data" / name
-        return Dataset(root, name)
+        return Dataset(root, name, transform=transform() if transform else None)
     except KeyError:
         raise KeyError(f"No dataset named {name}")
