@@ -5,7 +5,6 @@ from torch_geometric.transforms import NormalizeFeatures
 from dataset_loader import get_dataset
 from model_loader import get_model_by_name
 from model_tester import ModelTester
-from utils import split_in_two
 
 parser = argparse.ArgumentParser(
     description="A small utility to train a given GNN model on a given dataset."
@@ -39,7 +38,7 @@ parser.add_argument(
 def main():
     args = parser.parse_args()
 
-    dataset_name = args.dataset_name
+    dataset_name = args.dataset
     model_name: str = args.model
     epochs_num: int = args.epochs
     learning_rate: float = args.learning_rate
@@ -51,13 +50,15 @@ def main():
 
     Model = get_model_by_name(model_name)
 
+    print(dataset[0])
+    print(dataset.num_node_features)
+
     model = Model(
         num_node_features=dataset.num_node_features,
         num_classes=dataset.num_classes,
     )
 
-    print(dataset.__dir__())
-    print(dataset[0])
+    
 
     tester = ModelTester(
         dataset_name,
