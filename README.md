@@ -1,4 +1,4 @@
-# GNN Learning Script
+# GNN Training Script
 
 A small utility to train a given GNN model on a given dataset.
 
